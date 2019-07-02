@@ -52,6 +52,7 @@ public class CharacterClass {
         // ? == {0,1}
         // http 和 https 都是 协议名  下面来匹配一下
         testStr = new String[]{"http", "https"};
+
         quantifierLoopTest(testStr, "https?");
         hr();
         // 匹配 html open tag
