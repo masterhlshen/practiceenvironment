@@ -1,15 +1,20 @@
 package com.shl.test;
 
+import javax.swing.*;
 import javax.xml.crypto.Data;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.sql.SQLOutput;
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Test {
     public static String UID() {
@@ -21,31 +26,18 @@ public class Test {
     }
 
     public static void main(String[] args) throws ParseException, UnsupportedEncodingException {
+        System.out.println(">>>>>>>>>>>" + File.pathSeparator);
+        System.out.println(">>>>>>>>>>>" + File.pathSeparatorChar);
+        System.out.println(">>>>>>>>>>" + File.separator);
+        System.out.println(">>>>>>>>>>" + File.separatorChar);
 
-        String startDateStr = "2019-12-29";
-
-        String endDateStr = "2020-01-06";
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date start = sdf.parse(startDateStr);
-        Date end = sdf.parse(endDateStr);
-
         Calendar c = Calendar.getInstance();
-        c.setTime(end);
-        Calendar c2 = Calendar.getInstance();
-        c2.setTime(start);
         setChinaSunday(c);
-        setChinaSunday(c2);
         System.out.println(">>>>>>>>c = " + sdf.format(c.getTime()));
-        System.out.println(">>>>>>>>c2 = " + sdf.format(c2.getTime()));
         int weekNum = 1;
-        if (c.after(c2)) {
-            long time = c.getTimeInMillis() - c2.getTimeInMillis();
-            time /= (1000 * 3600 * 24 * 7);
-            weekNum = (int) time + 1;
-            System.out.println(time);
-        }
         System.out.println(">>>>>>>>.周num = " + weekNum);
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -78,6 +70,7 @@ public class Test {
             }
         }
 
+        Map.Entry entry ;
 
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
@@ -87,13 +80,42 @@ public class Test {
 
         listAddAllOtherList();
 
-        try {
-            System.out.println(">>>>>>>>" + (2 / 0));
-        } catch (Exception e) {
-            System.out.println(">>>>>>>>>>");
-            e.printStackTrace();
-        }
+        System.out.println(">>>>>>>>>>div个数" + render());
+        percentOut(3, 11);
+        String str = "$2c90abb66c9d6c35016c9d876401001a$$2c90abb66c9d6c35016c9d8952d90024$";
+        str = str.substring(1, str.length() - 1);
+        System.out.println(">>>>>>>>" + str.split("\\$\\$").length);
+        NumberFormat nbf = NumberFormat.getPercentInstance();
+        nbf.setMaximumFractionDigits(2);
+        System.out.println(">>>>>>>>>>" + nbf.format(0.2333333));
 
+        String dateStr = "2019-08-31";
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(">>>>>>>>>>>" + (sdf.parse(dateStr)));
+
+    }
+
+    public static int render() {
+        String s = "<div class=\"view\"><a href=\"javascript:;\" onclick=\"deleteGrid(this)\" class=\"layout-btn layout-item-close\"><i class=\"fa fa-remove\"></i><em>删除</em></a>\n" +
+                "                        <span class=\"layout-btn layout-item-move\"><i class=\"fa fa-drag-handle\"></i><em>移动</em></span>\n" +
+                "                        <div class=\"row\"><div class=\"col-xs-4 layout-item\" id=\"15663559229950\"></div><div class=\"col-xs-8 layout-item\" id=\"15663559229951\"></div></div></div>\f <div class=\"row\"><div class=\"col-xs-4 layout-item\" id=\"15663559229950\"></div><div class=\"col-xs-8 layout-item\" id=\"15663559229951\"></div></div></div> \n" +
+                "<div class=\"row\"><div class=\"col-xs-4 layout-item\" id=\"15663559229950\"></div><div class=\"col-xs-8 layout-item\" id=\"15663559229951\"></div><div>hello</div></div></div>";
+        Pattern p = Pattern.compile("<div\\s*class=\"row\">\\s*");
+        Matcher m = p.matcher(s);
+        int n = 0;
+        int start = 0;
+        int end = 0;
+        while (m.find()) {
+            n++;
+            System.out.println(m.group());
+
+            if (start > 0) {
+                System.out.println(s.substring(start, m.start()));
+            }
+            start = m.start();
+        }
+        System.out.println(s.substring(start));
+        return n;
     }
 
     public static void listAddAllOtherList() {
@@ -116,7 +138,16 @@ public class Test {
         System.out.println(">>>>>>>>>>>>>>>>ccc" + c.getTime());
 
     }
+
+    static void percentOut(double d1, double d2) {
+        NumberFormat nbf = NumberFormat.getPercentInstance();
+        nbf.setMaximumFractionDigits(2);
+        double result = d1 / d2;
+        System.out.println(nbf.format(result));
+    }
 }
+
+
 
 class A {
     private String id;
